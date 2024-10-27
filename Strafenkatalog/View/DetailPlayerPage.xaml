@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Strafenkatalog.View.DetailPlayerPage"
+             xmlns:model="clr-namespace:Strafenkatalog.Model"
+             xmlns:viewmodel="clr-namespace:Strafenkatalog.ViewModel"
+             x:DataType="viewmodel:DetailPlayerViewModel"
+             Shell.TabBarIsVisible="False"
+             Title="{Binding Player.NickName}">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="edit.svg" Command="{Binding EditPlayerCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <CollectionView ItemsSource="{Binding FineList}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="model:FineGiven">
+                <Frame Padding="15" Margin="15">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer   NumberOfTapsRequired="2" 
+                                                CommandParameter="{Binding .}" 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DetailPlayerViewModel}}, Path=DeleteFineCommand}"/>
+                    </Frame.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="72*, 18*"
+                          RowDefinitions="50*, 50*">
+                          
+                        <Label Text="{Binding FineName}" 
+                            Grid.Column="0" 
+                            Grid.Row="0"
+                            FontSize="Subtitle"
+                            FontAttributes="Bold"/>
+
+                        <Label Text="{Binding Date}"
+                            Grid.Row="1"/>
+
+                        <Label Text="{Binding Count,
+                                  StringFormat='{0:0}x'}"
+                            Grid.Column="1" 
+                            Grid.RowSpan="2"
+                            VerticalOptions="Center"
+                            FontAttributes="Bold"
+                            FontSize="Large"/>
+                    </Grid>
+
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+    
+</ContentPage>

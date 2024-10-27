@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Strafenkatalog.View.EditFinePage"
+             xmlns:viewmodel="clr-namespace:Strafenkatalog.ViewModel"
+             x:DataType="viewmodel:EditFineViewModel"
+             Title="Strafe">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
+    <Grid Padding="10,80,10,0" RowDefinitions="8*,8*, 70*" RowSpacing="20">
+
+        <!-- Eingabefeld für den Namen der Strafe -->
+        <Entry
+        Text="{Binding FineName}"
+        Placeholder="Name"
+        Grid.Row="0" />
+
+        <!-- Eingabefeld für den Betrag der Strafe -->
+        <Entry
+        Text="{Binding FineSum}"
+        Placeholder="Betrag"
+        Keyboard="Numeric"
+        Grid.Row="1" />
+
+        <!-- Button zum Hinzufügen der Strafe -->
+        <Button HeightRequest="50"
+            WidthRequest="150"
+            Grid.Row="2"
+            Command="{Binding AddFineCommand}"
+            Text="Hinzufügen" 
+            IsVisible="{Binding FineAdd}"/>
+
+        <Button HeightRequest="50"
+            WidthRequest="150"
+            Grid.Row="2"
+            Command="{Binding EditFineCommand}"
+            Text="Bearbeiten" 
+            IsVisible="{Binding FineEdit}"/>
+    </Grid>
+
+</ContentPage>

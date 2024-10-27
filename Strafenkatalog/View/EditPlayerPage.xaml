@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Strafenkatalog.View.EditPlayerPage"
+             xmlns:viewmodel="clr-namespace:Strafenkatalog.ViewModel"
+             x:DataType="viewmodel:EditPlayerViewModel"
+             Shell.TabBarIsVisible="False"
+             Title="Spieler">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsVisible="False" />
+    </Shell.BackButtonBehavior>
+
+    <Grid Padding="10,80,10,0" RowDefinitions="8*,8*,8*, 70*" RowSpacing="20">
+
+        <Entry
+        Text="{Binding FirstName}"
+        Placeholder="Vorname"
+        Grid.Row="0"/>
+        
+        <Entry
+        Text="{Binding LastName}"
+        Placeholder="Nachname"
+        Grid.Row="1"/>
+
+        <Entry
+            Text="{Binding NickName}"
+            Placeholder="Spitzname"
+            Grid.Row="2"/>
+
+        <Button HeightRequest="50"
+                WidthRequest="150"
+                Grid.Row="3"
+                Command="{Binding AddPlayerCommand}"
+                Text="Hinzufügen"
+                IsVisible="{Binding PlayerAdd}"/>
+
+        <HorizontalStackLayout Grid.Row="3" HorizontalOptions="Center" Spacing="20">
+            <Button HeightRequest="50"
+                WidthRequest="150"
+                Grid.Row="3"
+                Command="{Binding EditPlayerCommand}"
+                Text="Bearbeiten"
+                IsVisible="{Binding PlayerEdit}"/>
+
+            <Button HeightRequest="50"
+                WidthRequest="150"
+                Grid.Row="3"
+                Command="{Binding DeletePlayerCommand}"
+                Text="Löschen"
+                IsVisible="{Binding PlayerEdit}"/>
+
+        </HorizontalStackLayout>
+
+    </Grid>
+</ContentPage>

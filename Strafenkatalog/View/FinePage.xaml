@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Strafenkatalog.View.FinePage"
+             xmlns:viewmodel="clr-namespace:Strafenkatalog.ViewModel"
+             x:DataType="viewmodel:FineViewModel"
+             Title="Strafen">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="edit.svg" Command="{Binding EditFineCommand}"/>
+        <ToolbarItem IconImageSource="add.svg" Command="{Binding NewFineCommand}"/>
+    </ContentPage.ToolbarItems>
+    
+    <Grid Padding="10,80,10,0" RowDefinitions="12*,12*,12*, 15*, 15*, 70*" RowSpacing="30">
+
+        <Picker
+        ItemDisplayBinding="{Binding FullName}"
+        ItemsSource="{Binding PlayerList}"
+        SelectedItem="{Binding SelectedPlayer}"
+        Grid.Row="0"
+        Title="Spieler"/>
+
+        <Picker
+        ItemDisplayBinding="{Binding Name}"
+        ItemsSource="{Binding FineList}"
+        SelectedItem="{Binding SelectedFine}"
+        Grid.Row="1"
+        Title="Strafe"/>
+
+        <DatePicker 
+            Date="{Binding Date}"
+            Format="dd/MM/yyyy"
+            HorizontalOptions="Center"
+            Grid.Row="2"
+            />
+
+        <Label Text="{Binding Count}" FontSize="Title" HorizontalOptions="Center" Grid.Row="3" Padding="0,10,0,0"/>
+
+        <Stepper Minimum="1" Increment="1"
+                 Value="{Binding Count}"
+                 HorizontalOptions="Center"
+                 Grid.Row="4"                 
+                 />
+
+
+
+        <Button HeightRequest="50"
+                WidthRequest="150"
+                Grid.Row="5"
+                Command="{Binding AddFineCommand}"
+                Text="Hinzufügen"/>
+
+    </Grid>
+</ContentPage>
