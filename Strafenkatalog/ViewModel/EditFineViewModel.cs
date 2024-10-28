@@ -51,6 +51,27 @@ namespace Strafenkatalog.ViewModel
         {
             if (!string.IsNullOrWhiteSpace(FineName) || FineSum == null || FineSum <= 0)
             {
+                if(FineSum != Fine.Sum && await Shell.Current.DisplayAlert("Achtung","Durch das Ändern des Betrages, wird die Gesamtsumme der Spieler mitverändert.", "OK", "Abbrechen"))
+                {
+                    foreach(Player player in _dbContext.Players)
+                    {
+                        var count = _dbContext.FinesGiven.Where<FinesGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId).Count();
+
+                        if(FineSum > Fine.Sum)
+                        {
+                            decimal x = FineSum - Fine.Sum;
+                            player.Betrag += count * x;
+                        }
+                        else
+                        {
+                            decimal x = Fine.Sum - FineSum;
+                            player.Betrag -= count * x;
+                        }
+
+                        _dbContext.Players.Update(player);
+                    }
+                }
+
                 Fine.Name = FineName;
                 Fine.Sum = FineSum;
 
