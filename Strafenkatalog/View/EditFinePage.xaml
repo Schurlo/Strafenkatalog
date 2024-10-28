@@ -4,6 +4,7 @@
              x:Class="Strafenkatalog.View.EditFinePage"
              xmlns:viewmodel="clr-namespace:Strafenkatalog.ViewModel"
              x:DataType="viewmodel:EditFineViewModel"
+             Shell.TabBarIsVisible="False"
              Title="Strafe">
 
     <Shell.BackButtonBehavior>
