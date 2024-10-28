@@ -33,12 +33,21 @@
             Text="Hinzufügen" 
             IsVisible="{Binding FineAdd}"/>
 
-        <Button HeightRequest="50"
-            WidthRequest="150"
-            Grid.Row="2"
-            Command="{Binding EditFineCommand}"
-            Text="Bearbeiten" 
-            IsVisible="{Binding FineEdit}"/>
+        <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="20">
+            <Button HeightRequest="50"
+                WidthRequest="150"
+                Grid.Row="2"
+                Command="{Binding EditFineCommand}"
+                Text="Bearbeiten" 
+                IsVisible="{Binding FineEdit}"/>
+
+            <Button HeightRequest="50"
+                WidthRequest="150"
+                Grid.Row="2"
+                Command="{Binding DeleteFineCommand}"
+                Text="Löschen" 
+                IsVisible="{Binding FineEdit}"/>
+        <HorizontalStackLayout/>
     </Grid>
 
 </ContentPage>

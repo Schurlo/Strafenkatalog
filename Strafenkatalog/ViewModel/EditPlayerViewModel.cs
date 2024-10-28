@@ -14,7 +14,7 @@ namespace Strafenkatalog.ViewModel
     [QueryProperty(nameof(Player),nameof(Player))]
     public partial class EditPlayerViewModel : ObservableObject
     {
-        private readonly HandyDbContext _dbContext;
+        private HandyDbContext _dbContext;
 
         [ObservableProperty]
         Player player;

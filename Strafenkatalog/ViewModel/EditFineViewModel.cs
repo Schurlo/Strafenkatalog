@@ -15,7 +15,7 @@ namespace Strafenkatalog.ViewModel
     [QueryProperty(nameof(FineAdd), nameof(FineAdd))]
     public partial class EditFineViewModel : ObservableObject
     {
-        private readonly HandyDbContext _dbContext;
+        private HandyDbContext _dbContext;
 
         [ObservableProperty]
         bool fineEdit;
@@ -84,6 +84,22 @@ namespace Strafenkatalog.ViewModel
             else
             {
                await Shell.Current.DisplayAlert("Ausfüllen", "Es sind nicht alle Felder ausgefüllt", "OK");
+            }
+        }
+
+        [RelayCommand]
+        async Task DeleteFine()
+        {
+            if(await Shell.Current.DisplayAlert("Löschen","Sind Sie sicher die Strafenart zu löschen? Es werden alle davon verteilten Strafen mitgelöscht", "Ja", "Nein"))
+            {
+                foreach(FineGiven fine in _dbContext.FinesGiven.Where<FineGiven>(i => i.FineTypeId == Fine.FineTypeId))
+                {
+                    _dbContext.FinesGiven.Remove(fine);
+                }
+                _dbContext.Fines.Remove(Fine);
+                _dbContext.SaveChanges();
+
+                await Shell.Current.GoToAsync("../..");
             }
         }
 
