@@ -55,16 +55,16 @@ namespace Strafenkatalog.ViewModel
                 {
                     foreach(Player player in _dbContext.Players)
                     {
-                        var count = _dbContext.FinesGiven.Where<FinesGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId).Count();
+                        var count = _dbContext.FinesGiven.Where<FineGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId).Sum(f => f.Count);
 
                         if(FineSum > Fine.Sum)
                         {
-                            decimal x = FineSum - Fine.Sum;
+                            decimal? x = FineSum - Fine.Sum;
                             player.Betrag += count * x;
                         }
                         else
                         {
-                            decimal x = Fine.Sum - FineSum;
+                            decimal? x = Fine.Sum - FineSum;
                             player.Betrag -= count * x;
                         }
 
@@ -113,11 +113,20 @@ namespace Strafenkatalog.ViewModel
         {
             if(await Shell.Current.DisplayAlert("Löschen","Sind Sie sicher die Strafenart zu löschen? Es werden alle davon verteilten Strafen mitgelöscht", "Ja", "Nein"))
             {
-                foreach(FineGiven fine in _dbContext.FinesGiven.Where<FineGiven>(i => i.FineTypeId == Fine.FineTypeId))
+                foreach (Player player in _dbContext.Players)
+                {
+                    var count = _dbContext.FinesGiven.Where<FineGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId).Sum(f => f.Count);
+
+                    player.Betrag -= count * Fine.Sum;
+
+                    _dbContext.Players.Update(player);
+                }
+
+                foreach (FineGiven fine in _dbContext.FinesGiven.Where<FineGiven>(i => i.FineTypeId == Fine.FineTypeId))
                 {
                     _dbContext.FinesGiven.Remove(fine);
                 }
-                _dbContext.Fines.Remove(Fine);
+                _dbContext.FineTypes.Remove(Fine);
                 _dbContext.SaveChanges();
 
                 await Shell.Current.GoToAsync("../..");
