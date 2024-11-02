@@ -15,7 +15,7 @@ namespace Strafenkatalog.ViewModel
     [QueryProperty(nameof(FineAdd), nameof(FineAdd))]
     public partial class EditFineViewModel : ObservableObject
     {
-        private readonly HandyDbContext _dbContext;
+        private HandyDbContext _dbContext;
 
         [ObservableProperty]
         bool fineEdit;
@@ -51,6 +51,27 @@ namespace Strafenkatalog.ViewModel
         {
             if (!string.IsNullOrWhiteSpace(FineName) || FineSum == null || FineSum <= 0)
             {
+                if(FineSum != Fine.Sum && await Shell.Current.DisplayAlert("Achtung","Durch das Ändern des Betrages, wird die Gesamtsumme der Spieler mitverändert.", "OK", "Abbrechen"))
+                {
+                    foreach(Player player in _dbContext.Players)
+                    {
+                        var count = _dbContext.FinesGiven.Where<FinesGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId).Count();
+
+                        if(FineSum > Fine.Sum)
+                        {
+                            decimal x = FineSum - Fine.Sum;
+                            player.Betrag += count * x;
+                        }
+                        else
+                        {
+                            decimal x = Fine.Sum - FineSum;
+                            player.Betrag -= count * x;
+                        }
+
+                        _dbContext.Players.Update(player);
+                    }
+                }
+
                 Fine.Name = FineName;
                 Fine.Sum = FineSum;
 
@@ -84,6 +105,22 @@ namespace Strafenkatalog.ViewModel
             else
             {
                await Shell.Current.DisplayAlert("Ausfüllen", "Es sind nicht alle Felder ausgefüllt", "OK");
+            }
+        }
+
+        [RelayCommand]
+        async Task DeleteFine()
+        {
+            if(await Shell.Current.DisplayAlert("Löschen","Sind Sie sicher die Strafenart zu löschen? Es werden alle davon verteilten Strafen mitgelöscht", "Ja", "Nein"))
+            {
+                foreach(FineGiven fine in _dbContext.FinesGiven.Where<FineGiven>(i => i.FineTypeId == Fine.FineTypeId))
+                {
+                    _dbContext.FinesGiven.Remove(fine);
+                }
+                _dbContext.Fines.Remove(Fine);
+                _dbContext.SaveChanges();
+
+                await Shell.Current.GoToAsync("../..");
             }
         }
 
