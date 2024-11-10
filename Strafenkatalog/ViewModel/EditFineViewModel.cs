@@ -55,7 +55,7 @@ namespace Strafenkatalog.ViewModel
                 {
                     foreach(Player player in _dbContext.Players)
                     {
-                        var count = _dbContext.FinesGiven.Where<FineGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId).Sum(f => f.Count);
+                        var count = _dbContext.FinesGiven.Where<FineGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId && f.Paid == false).Sum(f => f.Count);
 
                         if(FineSum > Fine.Sum)
                         {
@@ -115,7 +115,7 @@ namespace Strafenkatalog.ViewModel
             {
                 foreach (Player player in _dbContext.Players)
                 {
-                    var count = _dbContext.FinesGiven.Where<FineGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId).Sum(f => f.Count);
+                    var count = _dbContext.FinesGiven.Where<FineGiven>(f => f.PlayerId == player.PlayerId && f.FineTypeId == Fine.FineTypeId && f.Paid == false).Sum(f => f.Count);
 
                     player.Betrag -= count * Fine.Sum;
 

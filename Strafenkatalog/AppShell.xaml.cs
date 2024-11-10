@@ -13,6 +13,8 @@ namespace Strafenkatalog
             Routing.RegisterRoute(nameof(EditFinePage), typeof(EditFinePage));
 
             Routing.RegisterRoute(nameof(DetailPlayerPage), typeof(DetailPlayerPage));
+
+            Routing.RegisterRoute(nameof(ArchivePlayerPage), typeof(ArchivePlayerPage));
         }
     }
 }

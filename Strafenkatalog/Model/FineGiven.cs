@@ -26,6 +26,9 @@ namespace Strafenkatalog.Model
         public int? playerId;
 
         [ObservableProperty]
+        public bool? paid = false;
+
+        [ObservableProperty]
         public int? fineTypeId;
     }
 }

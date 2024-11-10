@@ -36,6 +36,9 @@ namespace Strafenkatalog
             builder.Services.AddTransient<DetailPlayerPage>();
             builder.Services.AddTransient<DetailPlayerViewModel>();
 
+            builder.Services.AddTransient<ArchivePlayerPage>();
+            builder.Services.AddTransient<ArchivePlayerViewModel>();
+
             var dbContext = new HandyDbContext();
             dbContext.Database.EnsureCreated();
             dbContext.Dispose();

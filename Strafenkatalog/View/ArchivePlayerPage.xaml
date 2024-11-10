@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Strafenkatalog.View.DetailPlayerPage"
+             x:Class="Strafenkatalog.View.ArchivePlayerPage"
              xmlns:model="clr-namespace:Strafenkatalog.Model"
              xmlns:viewmodel="clr-namespace:Strafenkatalog.ViewModel"
-             x:DataType="viewmodel:DetailPlayerViewModel"
-             Shell.TabBarIsVisible="False"
-             Title="{Binding Player.NickName}">
+             x:DataType="viewmodel:ArchivePlayerViewModel"
+             Title="{Binding Player.NickName, StringFormat='{}{0} - Archiv'}">
 
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
-
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="archive.svg" Command="{Binding ArchiveCommand}" />
-        <ToolbarItem IconImageSource="edit.svg" Command="{Binding EditPlayerCommand}" />
-        <ToolbarItem Command="{Binding ArchiveFineAllCommand}" Order="Secondary" Text="Alle Archivieren"/>
-    </ContentPage.ToolbarItems>
 
     <CollectionView ItemsSource="{Binding FineList}">
         <CollectionView.ItemTemplate>
@@ -25,12 +18,12 @@
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer   NumberOfTapsRequired="2" 
                                                 CommandParameter="{Binding .}" 
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DetailPlayerViewModel}}, Path=ArchiveFineCommand}"/>
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ArchivePlayerViewModel}}, Path=DeleteFineCommand}"/>
                     </Frame.GestureRecognizers>
 
                     <Grid ColumnDefinitions="72*, 18*"
                           RowDefinitions="50*, 50*">
-                          
+
                         <Label Text="{Binding FineName}" 
                             Grid.Column="0" 
                             Grid.Row="0"
