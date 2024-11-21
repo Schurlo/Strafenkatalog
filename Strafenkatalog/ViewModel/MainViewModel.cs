@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Strafenkatalog.Model;
 using Strafenkatalog.View;
+using Strafenkatalog.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,6 +12,8 @@ using System.Threading.Tasks;
 
 using Strafenkatalog.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using CommunityToolkit.Maui.Storage;
+using OfficeOpenXml;
 
 namespace Strafenkatalog.ViewModel
 {
@@ -20,8 +23,13 @@ namespace Strafenkatalog.ViewModel
 
         public ObservableCollection<Player> PlayerList { get; set; } = new();
 
-        public MainViewModel()
+        IFileSaver fileSaver;
+
+        public MainViewModel(IFileSaver fileSaver)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            this.fileSaver = fileSaver;
+
             Shell.Current.Navigated += (sender, e) =>
             {
                 ListUpdate();
@@ -74,6 +82,21 @@ namespace Strafenkatalog.ViewModel
             {
                 ["Player"] = player
             });
+        }
+
+        [RelayCommand]
+        public async Task ExcelSheet()
+        {
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Strafen");
+                worksheet.Cells["A1"].Value = "Hallo Welt!";
+                var excelData = package.GetAsByteArray();
+
+                using var stream = new MemoryStream(excelData);
+                var path = await fileSaver.SaveAsync("Strafenkatalog.xlsx", stream, default);
+
+            };
         }
     }
 }

@@ -11,7 +11,8 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Order="Secondary"
-                     Text="CSV Export">
+                     Text="Excel Export"
+                     Command="{Binding ExcelSheetCommand}">
         </ToolbarItem>
         
         <ToolbarItem Order="Secondary"

@@ -3,6 +3,8 @@ using Strafenkatalog.View;
 using Strafenkatalog.ViewModel;
 
 using Strafenkatalog.DataAccess;
+using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
 
 namespace Strafenkatalog
 {
@@ -13,11 +15,14 @@ namespace Strafenkatalog
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
             builder.Services.AddDbContext<HandyDbContext>();
 
