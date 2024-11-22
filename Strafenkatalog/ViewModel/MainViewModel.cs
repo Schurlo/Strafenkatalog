@@ -1,19 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using OfficeOpenXml.Table;
+using Strafenkatalog.DataAccess;
 using Strafenkatalog.Model;
 using Strafenkatalog.View;
-using Strafenkatalog.Spreadsheet;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Strafenkatalog.DataAccess;
-using Microsoft.EntityFrameworkCore;
-using CommunityToolkit.Maui.Storage;
-using OfficeOpenXml;
 
 namespace Strafenkatalog.ViewModel
 {
@@ -87,10 +81,58 @@ namespace Strafenkatalog.ViewModel
         [RelayCommand]
         public async Task ExcelSheet()
         {
+            var fTypes = _dbContext.FineTypes.ToList();
+
             using (var package = new ExcelPackage())
             {
+                int length = fTypes.Count() + 2;
+                int height = PlayerList.Count() + 1;
+
+                decimal? sum = 0.0m;
                 var worksheet = package.Workbook.Worksheets.Add("Strafen");
-                worksheet.Cells["A1"].Value = "Hallo Welt!";
+
+                worksheet.Cells[1, 1].Value = "Namen";
+                
+                //Header der Tabelle
+                for (int i = 0; i < fTypes.Count(); i++)
+                {
+                    worksheet.Cells[1, i + 2].Value = fTypes[i].Name;
+                    worksheet.Cells[1, i + 2].AutoFitColumns();
+                };
+
+                worksheet.Cells[1, length].Value = "Betrag";
+
+                //Spieler Auflistung und deren Strafen
+                for(int i = 0; i < PlayerList.Count(); i++)
+                {
+                    var player = PlayerList[i];
+
+                    worksheet.Cells[i + 2, 1].Value = player.NickName;
+                    
+                    for(int j = 0; j < fTypes.Count(); j++)
+                    {
+                        var test = _dbContext.FinesGiven.Where<FineGiven>(x => x.PlayerId == player.PlayerId && x.FineTypeId == fTypes[j].FineTypeId && x.Paid == false);
+                        var result = test.ToList();
+
+                        var count = result.Sum(x => x.Count);
+                        sum += count * (fTypes[j].Sum ?? 0);
+                        
+                        worksheet.Cells[i + 2, j + 2].Value = count * fTypes[j].Sum;             
+                        worksheet.Cells[i + 2, j + 2].Style.Numberformat.Format = "#,##0.00€";
+                    }
+
+                    worksheet.Cells[i + 2, length].Value = sum;
+                    worksheet.Cells[i + 2, length].Style.Numberformat.Format = "#,##0.00€";
+                    worksheet.Cells[i + 2, length].Style.Font.Bold = true;
+
+                    sum = 0;
+                }
+
+                // Tabelle erstellen
+                var range = worksheet.Cells[1, 1, height, length];
+                var table = worksheet.Tables.Add(range, "Strafen");
+                table.TableStyle = TableStyles.Medium4;
+
                 var excelData = package.GetAsByteArray();
 
                 using var stream = new MemoryStream(excelData);
