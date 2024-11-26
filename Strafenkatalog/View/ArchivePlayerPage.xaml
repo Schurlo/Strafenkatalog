@@ -11,6 +11,13 @@
         <BackButtonBehavior IsVisible="False" />
     </Shell.BackButtonBehavior>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Secondary"
+                     Text="Alle Löschen"
+                     Command="{Binding DeleteAllFineCommand}">
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
     <CollectionView ItemsSource="{Binding FineList}">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:FineGiven">
